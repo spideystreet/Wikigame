@@ -1,0 +1,16 @@
+Package            Version
+------------------ ---------
+beautifulsoup4     4.12.3
+certifi            2024.7.4
+charset-normalizer 3.3.2
+idna               3.7
+pip                24.0
+prompt-toolkit     1.0.14
+Pygments           2.18.0
+PyInquirer         1.0.3
+regex              2024.5.15
+requests           2.32.3
+six                1.16.0
+soupsieve          2.5
+urllib3            2.2.2
+wcwidth            0.2.13
