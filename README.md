@@ -1,6 +1,8 @@
 # WikiGame
 
 WikiGame est un jeu où l'objectif est de naviguer d'une page Wikipedia à une autre en utilisant uniquement les liens hypertextes présents sur les pages, avec le moins de clics possible. Ce README couvre les trois versions du jeu, chacune apportant des améliorations et des fonctionnalités supplémentaires.
+La VERSION 3 est le wikigame_v3.py, le livrable attendu et commenté.
+Je laisse les 3 versions pour moi si je suis amener à réutiliser plus tard :p
 
 ## Installation Générale
 

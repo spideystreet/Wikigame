@@ -7,27 +7,32 @@ import time
 import threading
 import random
 
+# Fonction pour obtenir une page Wikipedia aléatoire
 def get_random_wikipedia_page():
     response = requests.get('https://fr.wikipedia.org/wiki/Sp%C3%A9cial:Page_au_hasard')
     return response.url, response.text
 
+# Fonction pour extraire les liens hypertextes de la page Wikipedia
 def extract_links(page_content):
     soup = BeautifulSoup(page_content, 'html.parser')
     content_div = soup.find(id='bodyContent')
     links = content_div.find_all('a', href=True)
     return [(link.get_text(), link['href']) for link in links if link['href'].startswith('/wiki/') and ':' not in link['href']]
 
+# Fonction pour charger les URLs thématiques depuis un fichier
 def load_thematic_urls(file_path):
     with open(file_path, 'r') as file:
         urls = file.readlines()
     return [url.strip() for url in urls]
 
+# Classe principale de l'application TkInter
 class WikiGameApp(tk.Tk):
     def __init__(self, thematic_file=None):
         super().__init__()
         self.title("WikiGame")
         self.geometry("800x600")
 
+        # Initialisation des pages de départ et d'arrivée
         self.start_url, self.start_content = get_random_wikipedia_page()
         if thematic_file:
             thematic_urls = load_thematic_urls(thematic_file)
@@ -47,6 +52,7 @@ class WikiGameApp(tk.Tk):
         self.create_widgets()
         self.update_links()
 
+    # Création des widgets de l'interface graphique
     def create_widgets(self):
         self.title_label = tk.Label(self, text="WikiGame", font=("Arial", 24))
         self.title_label.pack(pady=10)
@@ -76,6 +82,7 @@ class WikiGameApp(tk.Tk):
         self.timer_label.pack(pady=10)
         self.update_timer()
 
+    # Mise à jour de la liste des liens hypertextes affichés
     def update_links(self):
         self.links_listbox.delete(0, END)
         links = extract_links(self.current_content)
@@ -91,6 +98,7 @@ class WikiGameApp(tk.Tk):
 
         self.current_page_label.config(text=f"Page actuelle: {self.current_url.split('/')[-1]}")
 
+    # Gestion de la sélection d'un lien dans la liste
     def on_link_select(self, event):
         selection = event.widget.curselection()
         if selection:
@@ -102,6 +110,7 @@ class WikiGameApp(tk.Tk):
             else:
                 self.follow_link(index)
 
+    # Suivre un lien sélectionné
     def follow_link(self, index):
         link = self.links[self.start_index + index][1]
         self.current_url = 'https://fr.wikipedia.org' + link
@@ -115,14 +124,17 @@ class WikiGameApp(tk.Tk):
             messagebox.showinfo("Félicitations!", f"Vous avez atteint la cible en {self.turn} tours et en {int(elapsed_time)} secondes.")
             self.show_history()
 
+    # Afficher la page précédente
     def prev_page(self):
         self.start_index = max(0, self.start_index - 20)
         self.update_links()
 
+    # Afficher la page suivante
     def next_page(self):
         self.start_index += 20
         self.update_links()
 
+    # Afficher l'historique des pages visitées
     def show_history(self):
         history_window = tk.Toplevel(self)
         history_window.title("Historique des pages visitées")
@@ -132,6 +144,7 @@ class WikiGameApp(tk.Tk):
         for page in self.history:
             history_listbox.insert(END, page)
 
+    # Mettre à jour le timer affiché
     def update_timer(self):
         elapsed_time = int(time.time() - self.start_time)
         self.timer_label.config(text=f"Temps: {elapsed_time}s")
@@ -140,6 +153,7 @@ class WikiGameApp(tk.Tk):
 if __name__ == '__main__':
     import argparse
 
+    # Gestion des arguments de ligne de commande
     parser = argparse.ArgumentParser(description="WikiGame")
     parser.add_argument('-d', '--thematic', help="Fichier contenant les URLs thématiques")
     args = parser.parse_args()
